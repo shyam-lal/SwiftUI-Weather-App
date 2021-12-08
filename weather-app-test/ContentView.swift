@@ -7,16 +7,26 @@
 
 import SwiftUI
 
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+            .previewDevice("iPhone 11")
+    }
+}
+
 struct ContentView: View {
+    
+    @State private var isNight = false
+    
     var body: some View {
         ZStack {
-            BackgroundView(topColor: .blue, bottomColor: Color("lightBlue"))
+            BackgroundView(isNight: $isNight)
             
             //MARK: Main Stack
             VStack {
                 LocationView(location: "Dummy Location")
                 
-                MainTemperatureView(weatherImage: "cloud.sun.fill", temperature: 20)
+                MainTemperatureView(weatherImage: isNight ? "moon.stars.fill" : "cloud.sun.fill" , temperature: 20)
                 
                 HStack(spacing: 25) {
                     DailyWeatherView(day: "Mon", imageName: "cloud.sun.rain.fill", temperature: 20)
@@ -29,7 +39,7 @@ struct ContentView: View {
                 
                 //MARK: Button
                 Button {
-                    print("tapped")
+                    isNight.toggle()
                 } label: {
                     Text("Change day time")
                         .frame(width: 280, height: 50)
@@ -40,13 +50,6 @@ struct ContentView: View {
                 Spacer()
             }
         }
-    }
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-            .previewDevice("iPhone 11")
     }
 }
 
@@ -74,11 +77,11 @@ struct DailyWeatherView: View {
 }
 
 struct BackgroundView: View {
-    var topColor: Color
-    var bottomColor: Color
+    @Binding var isNight: Bool
     var body: some View {
-        LinearGradient(gradient: Gradient(colors: [topColor, bottomColor]),
-                       startPoint: .topLeading, endPoint: .bottomTrailing)
+        LinearGradient(gradient: Gradient(colors: [isNight ? .black : .blue,
+                                                   isNight ? .white : Color("lightBlue")])
+                       ,startPoint: .topLeading, endPoint: .bottomTrailing)
             .edgesIgnoringSafeArea(.all)
     }
 }
