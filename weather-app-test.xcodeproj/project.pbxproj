@@ -58,9 +58,10 @@
 		EF4147D326DAC62900F06B42 /* weather-app-test */ = {
 			isa = PBXGroup;
 			children = (
+				EFA5E1012760B02B00D6AFA1 /* Models */,
+				EFA5E1002760B00C00D6AFA1 /* Views */,
 				EF4147D426DAC62900F06B42 /* AppDelegate.swift */,
 				EF4147D626DAC62900F06B42 /* SceneDelegate.swift */,
-				EF4147D826DAC62900F06B42 /* ContentView.swift */,
 				EF4147DD26DAC63000F06B42 /* Assets.xcassets */,
 				EF4147E226DAC63000F06B42 /* LaunchScreen.storyboard */,
 				EF4147E526DAC63000F06B42 /* Info.plist */,
@@ -76,6 +77,21 @@
 				EF4147E026DAC63000F06B42 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		EFA5E1002760B00C00D6AFA1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				EF4147D826DAC62900F06B42 /* ContentView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		EFA5E1012760B02B00D6AFA1 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
