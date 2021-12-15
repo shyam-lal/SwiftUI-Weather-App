@@ -26,7 +26,10 @@ struct ContentView: View {
             VStack {
                 LocationView(location: "Dummy Location")
                 
-                MainTemperatureView(weatherImage: isNight ? "moon.stars.fill" : "cloud.sun.fill" , temperature: 20)
+                MainTemperatureView(weatherImage: isNight ? "moon.stars.fill" : "cloud.sun.fill" , date: 20)
+                    .padding(.bottom, 50)
+                
+                Spacer()
                 
                 HStack(spacing: 25) {
                     DailyWeatherView(day: "Mon", imageName: "cloud.sun.rain.fill", temperature: 20)
@@ -38,16 +41,15 @@ struct ContentView: View {
                 Spacer()
                 
                 //MARK: Button
-                Button {
-                    isNight.toggle()
-                } label: {
-                    Text("Change day time")
-                        .frame(width: 280, height: 50)
-                        .background(Color.white)
-                        .font(.system(size: 20, weight: .bold, design: .default))
-                        .cornerRadius(10.0)
-                }
-                Spacer()
+//                Button {
+//                    isNight.toggle()
+//                } label: {
+//                    Text("Change day time")
+//                        .frame(width: 280, height: 50)
+//                        .background(Color.white)
+//                        .font(.system(size: 20, weight: .bold, design: .default))
+//                        .cornerRadius(10.0)
+//                }
             }
         }
     }
@@ -88,7 +90,7 @@ struct BackgroundView: View {
 
 struct MainTemperatureView: View {
     var weatherImage: String
-    var temperature: Int
+    var date: Int
     var body: some View {
         VStack(spacing: 5) {
             Image(systemName: weatherImage)
@@ -96,8 +98,9 @@ struct MainTemperatureView: View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 180, height: 180)
+                .padding(.bottom, 50)
             
-            Text("\(temperature)*")
+            Text("\(date)*")
                 .font(.system(size: 70, weight: .medium))
                 .foregroundColor(.white)
         }
