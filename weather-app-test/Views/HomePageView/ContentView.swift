@@ -18,6 +18,11 @@ struct ContentView: View {
     
     @State private var isNight = false
     
+    func callAPI() {
+        print("++++++++++++++++++++")
+        WeatherManager.getCurrentWeatherDetails()
+    }
+    
     var body: some View {
         ZStack {
             BackgroundView(isNight: $isNight)
@@ -50,7 +55,9 @@ struct ContentView: View {
 //                        .font(.system(size: 20, weight: .bold, design: .default))
 //                        .cornerRadius(10.0)
 //                }
-            }
+            }.onAppear(perform: {
+                callAPI()
+            })
         }
     }
 }

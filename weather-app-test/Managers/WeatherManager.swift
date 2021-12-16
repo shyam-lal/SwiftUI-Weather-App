@@ -21,7 +21,7 @@ class WeatherManager {
         let task = URLSession.shared.dataTask(with: url!) { data, response, error in
             
             if let data = data {
-                if let books = try? JSONDecoder().decode([CurrentWeather].self, from: data) {
+                if let books = try? JSONDecoder().decode(CurrentWeather.self, from: data) {
                     print(books)
                 } else {
                     print("Invalid Response")
