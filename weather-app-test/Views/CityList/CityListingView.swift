@@ -7,14 +7,18 @@
 
 import SwiftUI
 
-struct CityListingView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
-
 struct CityListingView_Previews: PreviewProvider {
     static var previews: some View {
         CityListingView()
+            .previewDevice("iPhone 11")
+    }
+}
+
+struct CityListingView: View {
+    var body: some View {
+        List(cities) {
+            city in
+            CityRow(city: city)
+        }
     }
 }

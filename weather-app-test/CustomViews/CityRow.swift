@@ -8,13 +8,16 @@
 import SwiftUI
 
 struct CityRow: View {
+    var city: City
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        HStack {
+            Text(city.name)
+        }
     }
 }
 
 struct CityRow_Previews: PreviewProvider {
     static var previews: some View {
-        CityRow()
+        CityRow(city: cities[0]).previewDevice("iPhone 11").previewLayout(.fixed(width: 500, height: 100))
     }
 }
