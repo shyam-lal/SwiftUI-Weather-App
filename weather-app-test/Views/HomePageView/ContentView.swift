@@ -17,47 +17,57 @@ struct ContentView_Previews: PreviewProvider {
 struct ContentView: View {
     
     @State private var isNight = false
+    @State private var currentCity = "Mumbai"
+    @State var currentWeatherDataSource: CurrentWeather?
+    
     
     func callAPI() {
-        print("++++++++++++++++++++")
-        WeatherManager.getCurrentWeatherDetails()
-    }
+        WeatherManager.getCurrentWeatherDetails(city: currentCity)
+            WeatherManager.didFetchData = {
+                currentWeatherDataSource = WeatherManager.weatherData
+                print(currentWeatherDataSource)
+            }
+}
     
+    //MARK: ContentView
     var body: some View {
-        ZStack {
-            BackgroundView(isNight: $isNight)
-            
-            //MARK: Main Stack
-            VStack {
-                LocationView(location: "Dummy Location")
+        
+        NavigationView {
+            ZStack {
+                BackgroundView(isNight: $isNight)
                 
-                MainTemperatureView(weatherImage: isNight ? "moon.stars.fill" : "cloud.sun.fill" , date: 20)
-                    .padding(.bottom, 50)
-                
-                Spacer()
-                
-                HStack(spacing: 25) {
-                    DailyWeatherView(day: "Mon", imageName: "cloud.sun.rain.fill", temperature: 20)
-                    DailyWeatherView(day: "Tue", imageName: "cloud.sun.rain.fill", temperature: 50)
-                    DailyWeatherView(day: "Wed", imageName: "cloud.sun.rain.fill", temperature: 10)
-                    DailyWeatherView(day: "Thu", imageName: "cloud.sun.rain.fill", temperature: 15)
-                    DailyWeatherView(day: "Fri", imageName: "cloud.sun.rain.fill", temperature: 22)
-                }
-                Spacer()
-                
-                //MARK: Button
-//                Button {
-//                    isNight.toggle()
-//                } label: {
-//                    Text("Change day time")
-//                        .frame(width: 280, height: 50)
-//                        .background(Color.white)
-//                        .font(.system(size: 20, weight: .bold, design: .default))
-//                        .cornerRadius(10.0)
-//                }
-            }.onAppear(perform: {
-                callAPI()
-            })
+                //MARK: Main Stack
+                VStack {
+                    LocationView(location: currentWeatherDataSource?.location?.name ?? "Mumbai").padding(.top, 15)
+                    
+                    MainTemperatureView(weatherImage: isNight ? "moon.stars.fill" : "cloud.sun.fill" , date: currentWeatherDataSource?.current?.temp_c ?? 0)
+                        .padding(.bottom, 50)
+                    
+                    Spacer()
+                    
+                    HStack(spacing: 25) {
+                        DailyWeatherView(day: "Mon", imageName: "cloud.sun.rain.fill", temperature: 20)
+                        DailyWeatherView(day: "Tue", imageName: "cloud.sun.rain.fill", temperature: 50)
+                        DailyWeatherView(day: "Wed", imageName: "cloud.sun.rain.fill", temperature: 10)
+                        DailyWeatherView(day: "Thu", imageName: "cloud.sun.rain.fill", temperature: 15)
+                        DailyWeatherView(day: "Fri", imageName: "cloud.sun.rain.fill", temperature: 22)
+                    }
+                    Spacer()
+                    
+                    //MARK: Button
+                    //                Button {
+                    //                    isNight.toggle()
+                    //                } label: {
+                    //                    Text("Change day time")
+                    //                        .frame(width: 280, height: 50)
+                    //                        .background(Color.white)
+                    //                        .font(.system(size: 20, weight: .bold, design: .default))
+                    //                        .cornerRadius(10.0)
+                    //                }
+                }.onAppear(perform: {
+                    callAPI()
+                })
+            }.navigationBarHidden(true)
         }
     }
 }
@@ -97,7 +107,7 @@ struct BackgroundView: View {
 
 struct MainTemperatureView: View {
     var weatherImage: String
-    var date: Int
+    var date: Float
     var body: some View {
         VStack(spacing: 5) {
             Image(systemName: weatherImage)
@@ -107,7 +117,7 @@ struct MainTemperatureView: View {
                 .frame(width: 180, height: 180)
                 .padding(.bottom, 50)
             
-            Text("\(date)*")
+            Text("\(Int(date))°c")
                 .font(.system(size: 70, weight: .medium))
                 .foregroundColor(.white)
         }
@@ -118,9 +128,19 @@ struct MainTemperatureView: View {
 struct LocationView: View {
     var location: String
     var body: some View {
-        Text(location)
-            .font(.system(size: 32, weight: .medium, design: .default))
-            .foregroundColor(.white)
-            .padding()
+        
+        NavigationLink(destination: CityListingView()) {
+            Text(location)
+                .font(.system(size: 32, weight: .medium, design: .default))
+                .foregroundColor(.white)
+                .padding()
+        }
+        
+        //        NavigationLink(destination: CityListingView()) {
+        //            }
+        //            Text(location)
+        //                .font(.system(size: 32, weight: .medium, design: .default))
+        //                .foregroundColor(.white)
+        //                .padding()
     }
 }
