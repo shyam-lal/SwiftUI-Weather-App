@@ -16,15 +16,16 @@ struct ContentView_Previews: PreviewProvider {
 
 struct ContentView: View {
     
-    @State private var isNight = false
     @State private var currentCity = "Mumbai"
     @State var currentWeatherDataSource: CurrentWeather?
+    @State private var isNight = false
     
     
     func callAPI() {
         WeatherManager.getCurrentWeatherDetails(city: currentCity)
             WeatherManager.didFetchData = {
                 currentWeatherDataSource = WeatherManager.weatherData
+                isNight = (currentWeatherDataSource?.current?.is_day == 1 ? false : true)
                 print(currentWeatherDataSource)
             }
 }

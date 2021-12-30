@@ -19,6 +19,7 @@ struct LocationResponse: Codable {
 
 struct CurrentDetails: Codable {
     var temp_c: Float?
+    var is_day: Int?
 }
 
 struct DummyTest: Codable {
