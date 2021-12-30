@@ -8,14 +8,17 @@
 import Foundation
 
 struct CurrentWeather: Codable {
-
     var location: LocationResponse?
+    var current: CurrentDetails?
 }
 
 struct LocationResponse: Codable {
-    
     var name: String?
     var localtime: String?
+}
+
+struct CurrentDetails: Codable {
+    var temp_c: Float?
 }
 
 struct DummyTest: Codable {
