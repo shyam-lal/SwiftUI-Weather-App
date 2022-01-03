@@ -20,6 +20,13 @@ struct LocationResponse: Codable {
 struct CurrentDetails: Codable {
     var temp_c: Float?
     var is_day: Int?
+    var condition: ConditionDetails?
+    var wind_kph: Float?
+    var humidity: Int?
+}
+
+struct ConditionDetails: Codable {
+    var text: String?
 }
 
 struct DummyTest: Codable {
