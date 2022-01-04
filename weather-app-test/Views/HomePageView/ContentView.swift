@@ -16,16 +16,18 @@ struct ContentView_Previews: PreviewProvider {
 
 struct ContentView: View {
     @State var currentWeatherDataSource: CurrentWeather?
-    @State private var currentCity = "Mumbai"
+//    @State private var currentCity = "Mumbai"
     @State private var isNight = false
-    
+//    @State var primaryTextColor: Color?
     
     func callAPI() {
-        WeatherManager.getCurrentWeatherDetails(city: currentCity)
+        let currentCity = UserDefaults.standard.object(forKey: "currentCity") as? String
+        WeatherManager.getCurrentWeatherDetails(city: currentCity ?? "Mumbai")
             WeatherManager.didFetchData = {
                 currentWeatherDataSource = WeatherManager.weatherData
                 isNight = (currentWeatherDataSource?.current?.is_day == 1 ? false : true)
-                currentCity =  (currentWeatherDataSource?.location?.name)!
+//                primaryTextColor = (isNight ? Color.black : Color.white)
+//                currentCity =  (currentWeatherDataSource?.location?.name)!
                 print(currentWeatherDataSource)
             }
 }
@@ -39,17 +41,18 @@ struct ContentView: View {
                 
                 //MARK: Main Stack
                 VStack {
-                    LocationView(location: currentWeatherDataSource?.location?.name ?? "Mumbai").padding(.top, 15)
+                    LocationView(location: currentWeatherDataSource?.location?.name ?? "Mumbai", isNight: $isNight)
+                        .padding(.top, 15)
                     
-                    MainTemperatureView(currentWeather: currentWeatherDataSource, weatherImage: isNight ? "moon.stars.fill" : "cloud.sun.fill" , date: currentWeatherDataSource?.current?.temp_c ?? 0)
+                    MainTemperatureView(isNight: $isNight, currentWeather: currentWeatherDataSource, weatherImage: isNight ? "moon.stars.fill" : "cloud.sun.fill" , date: currentWeatherDataSource?.current?.temp_c ?? 0)
                         .padding(.bottom, 50)
                     
                     Spacer()
                     
                     HStack(spacing: 30) {
-                        DailyWeatherView(day: "Mon", imageName: "cloud.sun.rain.fill", temperature: 20)
-                        DailyWeatherView(day: "Tue", imageName: "cloud.sun.rain.fill", temperature: 50)
-                        DailyWeatherView(day: "Wed", imageName: "cloud.sun.rain.fill", temperature: 10)
+                        DailyWeatherView(isNight: $isNight, day: "Mon", imageName: "cloud.sun.rain.fill", temperature: 20)
+                        DailyWeatherView(isNight: $isNight, day: "Tue", imageName: "cloud.sun.rain.fill", temperature: 50)
+                        DailyWeatherView(isNight: $isNight, day: "Wed", imageName: "cloud.sun.rain.fill", temperature: 10)
 //                        DailyWeatherView(day: "Thu", imageName: "cloud.sun.rain.fill", temperature: 15)
 //                        DailyWeatherView(day: "Fri", imageName: "cloud.sun.rain.fill", temperature: 22)
                     }
@@ -74,6 +77,7 @@ struct ContentView: View {
 }
 
 struct DailyWeatherView: View {
+    @Binding var isNight: Bool
     var day: String
     var imageName: String
     var temperature: Int
@@ -81,7 +85,7 @@ struct DailyWeatherView: View {
         VStack {
             Text(day)
                 .font(.system(size: 20, weight: .light))
-                .foregroundColor(.black)
+                .foregroundColor(isNight ? Color.white : Color.black)
             
             Image(systemName: imageName)
                 .renderingMode(.original)
@@ -91,14 +95,15 @@ struct DailyWeatherView: View {
             
             Text("\(temperature)°")
                 .font(.system(size: 30, weight: .bold))
-                .foregroundColor(.black)
+                .foregroundColor(isNight ? Color.white : Color.black)
         }
         .padding(.all, 10)
         .padding(.leading, 15)
         .padding(.trailing, 15)
 //        .overlay(RoundedRectangle(cornerRadius: 20)
 //                    .stroke(Color.white, lineWidth: 1))
-        .background(RoundedRectangle(cornerRadius: 20).fill(Color(#colorLiteral(red: 0.1277317197, green: 0.8947259689, blue: 1, alpha: 1))))
+        
+        .background(RoundedRectangle(cornerRadius: 20).fill(isNight ? Color(#colorLiteral(red: 0.3588950293, green: 0.3624484454, blue: 0.3624484454, alpha: 1)) : Color(#colorLiteral(red: 0.1277317197, green: 0.8947259689, blue: 1, alpha: 1))))
     }
 }
 
@@ -114,6 +119,7 @@ struct BackgroundView: View {
 
 //MARK: Main weather icon and data.
 struct MainTemperatureView: View {
+    @Binding var isNight: Bool
     var currentWeather: CurrentWeather?
     var weatherImage: String
     var date: Float
@@ -125,21 +131,29 @@ struct MainTemperatureView: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 180, height: 180)
                 .padding(.bottom, 50)
+                .foregroundColor(isNight ? Color.white : Color.black)
             
             Text((currentWeather?.current?.condition?.text) ?? "status")
                 .font(.system(size: 20, weight: .light))
+                .foregroundColor(isNight ? Color.white : Color.black)
             
             Text("\(Int(date))°c")
                 .font(.system(size: 70, weight: .medium))
-                .foregroundColor(.black)
+                .foregroundColor(isNight ? Color.white : Color.black)
 
             
             HStack(spacing: 5){
                 Image(systemName: "wind")
+                    .foregroundColor(isNight ? Color.white : Color.black)
+
                 Text(String(currentWeather?.current?.wind_kph ?? 0) + " kph")
+                    .foregroundColor(isNight ? Color.white : Color.black)
+
                 Image(systemName: "drop")
+                    .foregroundColor(isNight ? Color.white : Color.black)
                     .padding(.leading, 10)
                 Text(String(currentWeather?.current?.humidity ?? 0))
+                    .foregroundColor(isNight ? Color.white : Color.black)
             }
         }
         .padding(.bottom, 50)
@@ -147,13 +161,14 @@ struct MainTemperatureView: View {
 }
 
 struct LocationView: View {
-    var location: String
     
+    var location: String
+    @Binding var isNight: Bool
     var body: some View {
         NavigationLink(destination: CityListingView()) {
             Text(location)
                 .font(.system(size: 32, weight: .medium, design: .default))
-                .foregroundColor(.white)
+                .foregroundColor(isNight ? Color.white : Color.black)
                 .padding()
         }
         

@@ -15,10 +15,17 @@ struct CityListingView_Previews: PreviewProvider {
 }
 
 struct CityListingView: View {
+    
+    @Environment(\.presentationMode) private var presentationMode: Binding<PresentationMode>
+    @State public var setCity: (() -> Void)?
     var body: some View {
         List(cities) {
             city in
             CityRow(city: city)
+                .onTapGesture {
+                    UserDefaults.standard.set(city.name, forKey: "currentCity")
+                    presentationMode.wrappedValue.dismiss()
+                }
         }
     }
 }
