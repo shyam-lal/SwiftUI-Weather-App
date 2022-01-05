@@ -2,7 +2,7 @@
 //  ContentView.swift
 //  weather-app-test
 //
-//  Created by Qburst on 29/08/21.
+//  Created by shyamlal on 29/08/21.
 //
 
 import SwiftUI
@@ -44,15 +44,15 @@ struct ContentView: View {
                     LocationView(location: currentWeatherDataSource?.location?.name ?? "Mumbai", isNight: $isNight)
                         .padding(.top, 15)
                     
-                    MainTemperatureView(isNight: $isNight, currentWeather: currentWeatherDataSource, weatherImage: isNight ? "moon.stars.fill" : "cloud.sun.fill" , date: currentWeatherDataSource?.current?.temp_c ?? 0)
+                    MainTemperatureView(isNight: $isNight, currentWeather: currentWeatherDataSource, weatherImage: isNight ? ImageNames.moonAndStars.rawValue : ImageNames.cloudAndSun.rawValue , date: currentWeatherDataSource?.current?.temp_c ?? 0)
                         .padding(.bottom, 50)
                     
                     Spacer()
                     
                     HStack(spacing: 30) {
-                        DailyWeatherView(isNight: $isNight, day: "Mon", imageName: "cloud.sun.rain.fill", temperature: 20)
-                        DailyWeatherView(isNight: $isNight, day: "Tue", imageName: "cloud.sun.rain.fill", temperature: 50)
-                        DailyWeatherView(isNight: $isNight, day: "Wed", imageName: "cloud.sun.rain.fill", temperature: 10)
+                        DailyWeatherView(isNight: $isNight, day: "Mon", imageName: ImageNames.cloudSunAndRain.rawValue, temperature: 20)
+                        DailyWeatherView(isNight: $isNight, day: "Tue", imageName: ImageNames.cloudSunAndRain.rawValue, temperature: 50)
+                        DailyWeatherView(isNight: $isNight, day: "Wed", imageName: ImageNames.cloudSunAndRain.rawValue, temperature: 10)
 //                        DailyWeatherView(day: "Thu", imageName: "cloud.sun.rain.fill", temperature: 15)
 //                        DailyWeatherView(day: "Fri", imageName: "cloud.sun.rain.fill", temperature: 22)
                     }
@@ -143,13 +143,13 @@ struct MainTemperatureView: View {
 
             
             HStack(spacing: 5){
-                Image(systemName: "wind")
+                Image(systemName: ImageNames.wind.rawValue)
                     .foregroundColor(isNight ? Color.white : Color.black)
 
                 Text(String(currentWeather?.current?.wind_kph ?? 0) + " kph")
                     .foregroundColor(isNight ? Color.white : Color.black)
 
-                Image(systemName: "drop")
+                Image(systemName: ImageNames.drop.rawValue)
                     .foregroundColor(isNight ? Color.white : Color.black)
                     .padding(.leading, 10)
                 Text(String(currentWeather?.current?.humidity ?? 0))
