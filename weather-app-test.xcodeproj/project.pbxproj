@@ -129,8 +129,8 @@
 		EFA5E1002760B00C00D6AFA1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				EFCCB5582779F5CB00915049 /* CityList */,
-				EFC819902768A8FC00C37BD1 /* HomePageView */,
+				EFCCB5592779F6CB00915049 /* CityListingView.swift */,
+				EF4147D826DAC62900F06B42 /* ContentView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -151,22 +151,6 @@
 				EFC819882768968500C37BD1 /* WeatherManager.swift */,
 			);
 			path = Managers;
-			sourceTree = "<group>";
-		};
-		EFC819902768A8FC00C37BD1 /* HomePageView */ = {
-			isa = PBXGroup;
-			children = (
-				EF4147D826DAC62900F06B42 /* ContentView.swift */,
-			);
-			path = HomePageView;
-			sourceTree = "<group>";
-		};
-		EFCCB5582779F5CB00915049 /* CityList */ = {
-			isa = PBXGroup;
-			children = (
-				EFCCB5592779F6CB00915049 /* CityListingView.swift */,
-			);
-			path = CityList;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
