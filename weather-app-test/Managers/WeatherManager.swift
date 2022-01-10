@@ -10,7 +10,10 @@ import Foundation
 class WeatherManager {
     
     static var didFetchData: (() -> Void)?
+    static var didFetchForecastData: (() -> Void)?
     static var weatherData: CurrentWeather?
+    static var forecastData: [ForecastDay]?
+
 //    static var forecastData
     
     static func getCurrentWeatherDetails(city: String) {
@@ -46,26 +49,29 @@ class WeatherManager {
     
     
     static func getWeatherForecast(city: String) {
-        var urlComponents = URLComponents(string: "http://api.weatherapi.com/v1/forecast.json")
+        var urlComponents = URLComponents(string: "https://api.weatherapi.com/v1/forecast.json")
         urlComponents?.queryItems = [
-            URLQueryItem(name: "key", value: ""),
+            URLQueryItem(name: "key", value: "8d5ce6ac991441f89db123830211312"),
             URLQueryItem(name: "q", value: city),
             URLQueryItem(name: "days", value: "3"),
             URLQueryItem(name: "aqi", value: "no")
         ]
         let url = urlComponents?.url
+//        let url = URL(string: "https://api.weatherapi.com/v1/forecast.json?key=8d5ce6ac991441f89db123830211312&q=London&days=3&aqi=no")
         var request = URLRequest(url: url!)
         request.httpMethod = "GET"
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let data = data {
-                if let weather = try? JSONDecoder().decode(CurrentWeather.self, from: data) {
+                if let weather = try? JSONDecoder().decode(ForecastModel.self, from: data) {
                     print(weather)
+                    forecastData = weather.forecast?.forecastday
+                    didFetchForecastData?()
                 } else {
                     print("Invalid response")
                 }
             } else if let error = error {
-                print("HTTP request Failed \(error)")
+                print("HTTP request Failed ")
             }
         }
         task.resume()

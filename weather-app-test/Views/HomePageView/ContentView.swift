@@ -16,21 +16,29 @@ struct ContentView_Previews: PreviewProvider {
 
 struct ContentView: View {
     @State var currentWeatherDataSource: CurrentWeather?
-//    @State private var currentCity = "Mumbai"
+    @State var weatherForecastDataSource: [ForecastDay]?
     @State private var isNight = false
-//    @State var primaryTextColor: Color?
     
+    //MARK: API Calls
     func callAPI() {
         let currentCity = UserDefaults.standard.object(forKey: "currentCity") as? String
         WeatherManager.getCurrentWeatherDetails(city: currentCity ?? "Mumbai")
-            WeatherManager.didFetchData = {
-                currentWeatherDataSource = WeatherManager.weatherData
-                isNight = (currentWeatherDataSource?.current?.is_day == 1 ? false : true)
-//                primaryTextColor = (isNight ? Color.black : Color.white)
-//                currentCity =  (currentWeatherDataSource?.location?.name)!
-                print(currentWeatherDataSource)
-            }
-}
+        WeatherManager.didFetchData = {
+            currentWeatherDataSource = WeatherManager.weatherData
+            isNight = (currentWeatherDataSource?.current?.is_day == 1 ? false : true)
+            //                primaryTextColor = (isNight ? Color.black : Color.white)
+            //                currentCity =  (currentWeatherDataSource?.location?.name)!
+        }
+    }
+    
+    func callForecastAPI() {
+        let currentCity = UserDefaults.standard.object(forKey: "currentCity") as? String
+        WeatherManager.getWeatherForecast(city: currentCity ?? "Mumbai")
+        WeatherManager.didFetchForecastData = {
+            weatherForecastDataSource = WeatherManager.forecastData
+        }
+    }
+    
     
     //MARK: ContentView
     var body: some View {
@@ -50,11 +58,17 @@ struct ContentView: View {
                     Spacer()
                     
                     HStack(spacing: 30) {
-                        DailyWeatherView(isNight: $isNight, day: "Mon", imageName: ImageNames.cloudSunAndRain.rawValue, temperature: 20)
-                        DailyWeatherView(isNight: $isNight, day: "Tue", imageName: ImageNames.cloudSunAndRain.rawValue, temperature: 50)
-                        DailyWeatherView(isNight: $isNight, day: "Wed", imageName: ImageNames.cloudSunAndRain.rawValue, temperature: 10)
-//                        DailyWeatherView(day: "Thu", imageName: "cloud.sun.rain.fill", temperature: 15)
-//                        DailyWeatherView(day: "Fri", imageName: "cloud.sun.rain.fill", temperature: 22)
+                        
+                        ForEach(0..<3, id: \.self) {
+                            
+                            DailyWeatherView(forecastDataSource: weatherForecastDataSource?[$0], isNight: $isNight)
+                        }
+                        
+                        //                        DailyWeatherView(forecastDataSource: weatherForecastDataSource, isNight: $isNight, day: "Mon", imageName: ImageNames.cloudSunAndRain.rawValue, temperature: 20)
+                        //                        DailyWeatherView(isNight: $isNight, day: "Tue", imageName: ImageNames.cloudSunAndRain.rawValue, temperature: 50)
+                        //                        DailyWeatherView(isNight: $isNight, day: "Wed", imageName: ImageNames.cloudSunAndRain.rawValue, temperature: 10)
+                        //                        DailyWeatherView(day: "Thu", imageName: "cloud.sun.rain.fill", temperature: 15)
+                        //                        DailyWeatherView(day: "Fri", imageName: "cloud.sun.rain.fill", temperature: 22)
                     }
                     Spacer()
                     
@@ -70,6 +84,7 @@ struct ContentView: View {
                     //                }
                 }.onAppear(perform: {
                     callAPI()
+                    callForecastAPI()
                 })
             }.navigationBarHidden(true)
         }
@@ -77,31 +92,29 @@ struct ContentView: View {
 }
 
 struct DailyWeatherView: View {
+    var forecastDataSource: ForecastDay?
     @Binding var isNight: Bool
-    var day: String
-    var imageName: String
-    var temperature: Int
     var body: some View {
         VStack {
-            Text(day)
+            Text(((forecastDataSource?.date?.stringToDate().dayOfWeek()) ?? "UHU").prefix(3))
                 .font(.system(size: 20, weight: .light))
                 .foregroundColor(isNight ? Color.white : Color.black)
             
-            Image(systemName: imageName)
+            Image(systemName: ImageNames.cloudSunAndRain.rawValue)
                 .renderingMode(.original)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 50, height: 50)
             
-            Text("\(temperature)°")
+            Text("\(String(Int(forecastDataSource?.day?.avgtemp_c ?? 20)))°")
                 .font(.system(size: 30, weight: .bold))
                 .foregroundColor(isNight ? Color.white : Color.black)
         }
         .padding(.all, 10)
         .padding(.leading, 15)
         .padding(.trailing, 15)
-//        .overlay(RoundedRectangle(cornerRadius: 20)
-//                    .stroke(Color.white, lineWidth: 1))
+        //        .overlay(RoundedRectangle(cornerRadius: 20)
+        //                    .stroke(Color.white, lineWidth: 1))
         
         .background(RoundedRectangle(cornerRadius: 20).fill(isNight ? Color(#colorLiteral(red: 0.3588950293, green: 0.3624484454, blue: 0.3624484454, alpha: 1)) : Color(#colorLiteral(red: 0.1277317197, green: 0.8947259689, blue: 1, alpha: 1))))
     }
@@ -140,15 +153,15 @@ struct MainTemperatureView: View {
             Text("\(Int(date))°c")
                 .font(.system(size: 70, weight: .medium))
                 .foregroundColor(isNight ? Color.white : Color.black)
-
+            
             
             HStack(spacing: 5){
                 Image(systemName: ImageNames.wind.rawValue)
                     .foregroundColor(isNight ? Color.white : Color.black)
-
+                
                 Text(String(currentWeather?.current?.wind_kph ?? 0) + " kph")
                     .foregroundColor(isNight ? Color.white : Color.black)
-
+                
                 Image(systemName: ImageNames.drop.rawValue)
                     .foregroundColor(isNight ? Color.white : Color.black)
                     .padding(.leading, 10)
