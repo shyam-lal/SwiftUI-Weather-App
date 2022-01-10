@@ -26,9 +26,10 @@ let cities = [
     City(id: 5, name: "Jakartha"),
     City(id: 6, name: "Delhi"),
     City(id: 7, name: "Manila"),
-    City(id: 8, name: "SHanghai"),
+    City(id: 8, name: "Shanghai"),
     City(id: 9, name: "Karachi"),
     City(id: 10, name: "Beijng"),
     City(id: 11, name: "Sao Polo"),
-    City(id: 12, name: "London")
+    City(id: 12, name: "London"),
+    City(id: 13, name: "Brazil")
 ]

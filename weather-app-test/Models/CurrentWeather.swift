@@ -28,7 +28,3 @@ struct CurrentDetails: Codable {
 struct ConditionDetails: Codable {
     var text: String?
 }
-
-struct DummyTest: Codable {
-    var id: String?
-}
